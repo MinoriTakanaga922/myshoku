@@ -25,7 +25,7 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      setError("登録に失敗しました。時間をおいて再度お試しください。");
+      setError(error.message);
       setLoading(false);
     } else {
       setSent(true);
