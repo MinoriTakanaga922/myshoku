@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,21 +13,19 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+    const res = await fetch("/api/auth/send-magic-link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
     });
 
-    if (error) {
-      setError("このメールアドレスは登録されていません。新規登録をお試しください。");
-      setLoading(false);
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error ?? "送信に失敗しました");
     } else {
       setSent(true);
     }
+    setLoading(false);
   };
 
   return (
@@ -37,7 +33,6 @@ export default function LoginPage() {
       className="flex min-h-screen flex-col items-center justify-center px-4"
       style={{ backgroundColor: "var(--color-cream)" }}
     >
-      {/* ロゴ */}
       <div className="mb-8 text-center">
         <div className="mb-2">
           <span className="font-black text-3xl tracking-tight" style={{ color: "var(--color-green)" }}>
@@ -55,19 +50,20 @@ export default function LoginPage() {
       <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-sm">
         {sent ? (
           <div className="text-center">
-            <p className="mb-3 text-3xl">📬</p>
+            <p className="mb-3 text-4xl">📬</p>
             <h1 className="mb-2 font-bold text-base" style={{ color: "var(--color-text)" }}>
               メールを送信しました
             </h1>
             <p className="text-xs leading-relaxed" style={{ color: "var(--color-muted)" }}>
               <span className="font-medium" style={{ color: "var(--color-text)" }}>{email}</span>{" "}
-              にログインリンクを送りました。メールを確認してリンクをクリックしてください。
+              にログインリンクを送りました。
+              <br />メールのリンクをタップすると管理画面に入れます。
             </p>
-            <p className="mt-4 text-xs" style={{ color: "var(--color-muted)" }}>
-              届かない場合は迷惑メールフォルダもご確認ください。
+            <p className="mt-3 text-xs" style={{ color: "var(--color-muted)" }}>
+              届かない場合は迷惑メールもご確認ください。
             </p>
             <button
-              onClick={() => setSent(false)}
+              onClick={() => { setSent(false); setEmail(""); }}
               className="mt-5 text-xs underline"
               style={{ color: "var(--color-green)" }}
             >
@@ -76,30 +72,28 @@ export default function LoginPage() {
           </div>
         ) : (
           <>
-            <h1 className="mb-5 text-center text-base font-bold" style={{ color: "var(--color-text)" }}>
-              ログイン
+            <h1 className="mb-1 text-center text-base font-bold" style={{ color: "var(--color-text)" }}>
+              ログイン / 新規登録
             </h1>
+            <p className="mb-5 text-center text-xs" style={{ color: "var(--color-muted)" }}>
+              メールアドレスを入力するだけでOK
+            </p>
 
             {error && (
               <div className="mb-4 rounded-xl bg-red-50 p-3 text-xs text-red-600">{error}</div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-xs font-medium" style={{ color: "var(--color-muted)" }}>
-                  メールアドレス
-                </label>
-                <input
-                  type="email"
-                  required
-                  autoComplete="email"
-                  placeholder="example@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none"
-                  style={{ borderColor: "#e5e7eb" }}
-                />
-              </div>
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="example@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-xl border px-3 py-3 text-sm focus:outline-none"
+                style={{ borderColor: "#e5e7eb" }}
+              />
 
               <button
                 type="submit"
@@ -110,13 +104,6 @@ export default function LoginPage() {
                 {loading ? "送信中..." : "ログインリンクを送る"}
               </button>
             </form>
-
-            <p className="mt-5 text-center text-xs" style={{ color: "var(--color-muted)" }}>
-              アカウントをお持ちでない方は{" "}
-              <Link href="/admin/register" className="underline" style={{ color: "var(--color-green)" }}>
-                新規登録
-              </Link>
-            </p>
           </>
         )}
       </div>

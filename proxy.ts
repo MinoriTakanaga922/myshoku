@@ -31,13 +31,12 @@ export async function proxy(request: NextRequest) {
 
   const isAdminPath = request.nextUrl.pathname.startsWith("/admin");
   const isLoginPath = request.nextUrl.pathname.startsWith("/admin/login");
-  const isRegisterPath = request.nextUrl.pathname.startsWith("/admin/register");
 
-  if (isAdminPath && !isLoginPath && !isRegisterPath && !user) {
+  if (isAdminPath && !isLoginPath && !user) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
-  if ((isLoginPath || isRegisterPath) && user) {
+  if (isLoginPath && user) {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
 
