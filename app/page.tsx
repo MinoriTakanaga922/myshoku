@@ -79,7 +79,7 @@ export default function HomePage() {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <div className="text-white">
             <span className="font-black text-xl tracking-tight">MY</span>
-            <span className="font-black text-xl" style={{ color: "#bbf7d0" }}>
+            <span className="font-black text-xl" style={{ color: "#bfdbfe" }}>
               SHOKU
             </span>
             <span className="text-xs ml-2 opacity-75">マルシェ</span>

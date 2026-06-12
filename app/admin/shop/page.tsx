@@ -25,7 +25,7 @@ function ImageUpload({
         {label}
       </label>
       <div
-        className={`relative overflow-hidden rounded-xl border-2 border-dashed cursor-pointer transition-colors hover:border-green-400 ${
+        className={`relative overflow-hidden rounded-xl border-2 border-dashed cursor-pointer transition-colors hover:border-blue-400 ${
           aspect === "square" ? "h-24 w-24" : "h-36 w-full"
         }`}
         style={{ borderColor: preview ? "var(--color-green)" : "#e5e7eb" }}
@@ -192,8 +192,8 @@ export default function AdminShopPage() {
         <div
           className="rounded-xl p-3 text-xs"
           style={{
-            backgroundColor: message.type === "success" ? "#f0fdf4" : "#fef2f2",
-            color: message.type === "success" ? "#15803d" : "#b91c1c",
+            backgroundColor: message.type === "success" ? "#eff6ff" : "#fef2f2",
+            color: message.type === "success" ? "#1d4ed8" : "#b91c1c",
           }}
         >
           {message.type === "success" ? "✅ " : "❌ "}

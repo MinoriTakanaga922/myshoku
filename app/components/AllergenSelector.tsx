@@ -17,7 +17,7 @@ export default function AllergenSelector({
   const selectedStyle =
     mode === "exclude"
       ? { backgroundColor: "#dc2626", borderColor: "#dc2626", color: "white" }
-      : { backgroundColor: "#16a34a", borderColor: "#16a34a", color: "white" };
+      : { backgroundColor: "#2563eb", borderColor: "#2563eb", color: "white" };
 
   return (
     <div className="space-y-5">

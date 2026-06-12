@@ -83,7 +83,7 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
           </Link>
           <div className="text-white">
             <span className="font-black text-base tracking-tight">MY</span>
-            <span className="font-black text-base" style={{ color: "#bbf7d0" }}>
+            <span className="font-black text-base" style={{ color: "#bfdbfe" }}>
               SHOKU
             </span>
           </div>
@@ -192,7 +192,7 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
                     style={
                       selectedAllergens.length > 0
                         ? {
-                            borderLeft: `4px solid ${safe ? "#16a34a" : "#dc2626"}`,
+                            borderLeft: `4px solid ${safe ? "#2563eb" : "#dc2626"}`,
                           }
                         : {}
                     }
@@ -223,7 +223,7 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
                               className="flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-bold"
                               style={
                                 safe
-                                  ? { backgroundColor: "#dcfce7", color: "#15803d" }
+                                  ? { backgroundColor: "#dbeafe", color: "#1d4ed8" }
                                   : { backgroundColor: "#fee2e2", color: "#b91c1c" }
                               }
                             >

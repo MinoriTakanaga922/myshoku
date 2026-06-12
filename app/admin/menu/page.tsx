@@ -329,8 +329,8 @@ export default function AdminMenuPage() {
             <div
               className="mb-4 rounded-xl p-3 text-xs"
               style={{
-                backgroundColor: message.type === "success" ? "#f0fdf4" : "#fef2f2",
-                color: message.type === "success" ? "#15803d" : "#b91c1c",
+                backgroundColor: message.type === "success" ? "#eff6ff" : "#fef2f2",
+                color: message.type === "success" ? "#1d4ed8" : "#b91c1c",
               }}
             >
               {message.type === "success" ? "✅ " : "❌ "}
@@ -392,7 +392,7 @@ export default function AdminMenuPage() {
                 メニュー写真
               </label>
               <div
-                className="relative flex h-32 w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-colors hover:border-green-400"
+                className="relative flex h-32 w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed transition-colors hover:border-blue-400"
                 style={{ borderColor: menuPhotoPreview ? "var(--color-green)" : "#e5e7eb" }}
                 onClick={() => photoInputRef.current?.click()}
               >
