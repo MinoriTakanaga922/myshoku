@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -19,13 +19,13 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        shouldCreateUser: false,
+        shouldCreateUser: true,
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
     if (error) {
-      setError("このメールアドレスは登録されていません。新規登録をお試しください。");
+      setError("登録に失敗しました。時間をおいて再度お試しください。");
       setLoading(false);
     } else {
       setSent(true);
@@ -57,11 +57,11 @@ export default function LoginPage() {
           <div className="text-center">
             <p className="mb-3 text-3xl">📬</p>
             <h1 className="mb-2 font-bold text-base" style={{ color: "var(--color-text)" }}>
-              メールを送信しました
+              確認メールを送信しました
             </h1>
             <p className="text-xs leading-relaxed" style={{ color: "var(--color-muted)" }}>
               <span className="font-medium" style={{ color: "var(--color-text)" }}>{email}</span>{" "}
-              にログインリンクを送りました。メールを確認してリンクをクリックしてください。
+              に登録リンクを送りました。メールを確認してリンクをクリックすると登録完了です。
             </p>
             <p className="mt-4 text-xs" style={{ color: "var(--color-muted)" }}>
               届かない場合は迷惑メールフォルダもご確認ください。
@@ -76,9 +76,12 @@ export default function LoginPage() {
           </div>
         ) : (
           <>
-            <h1 className="mb-5 text-center text-base font-bold" style={{ color: "var(--color-text)" }}>
-              ログイン
+            <h1 className="mb-1 text-center text-base font-bold" style={{ color: "var(--color-text)" }}>
+              新規登録
             </h1>
+            <p className="mb-5 text-center text-xs" style={{ color: "var(--color-muted)" }}>
+              メールアドレスを入力すると登録リンクを送ります
+            </p>
 
             {error && (
               <div className="mb-4 rounded-xl bg-red-50 p-3 text-xs text-red-600">{error}</div>
@@ -107,14 +110,14 @@ export default function LoginPage() {
                 className="w-full rounded-xl py-3 text-sm font-medium text-white transition-opacity"
                 style={{ backgroundColor: loading ? "#9ca3af" : "var(--color-green)" }}
               >
-                {loading ? "送信中..." : "ログインリンクを送る"}
+                {loading ? "送信中..." : "登録リンクを送る"}
               </button>
             </form>
 
             <p className="mt-5 text-center text-xs" style={{ color: "var(--color-muted)" }}>
-              アカウントをお持ちでない方は{" "}
-              <Link href="/admin/register" className="underline" style={{ color: "var(--color-green)" }}>
-                新規登録
+              すでにアカウントをお持ちの方は{" "}
+              <Link href="/admin/login" className="underline" style={{ color: "var(--color-green)" }}>
+                ログイン
               </Link>
             </p>
           </>
