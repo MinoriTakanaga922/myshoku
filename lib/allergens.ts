@@ -12,3 +12,6 @@ export const RECOMMENDED_ALLERGENS = [
 export const ALLERGENS = [...MANDATORY_ALLERGENS, ...RECOMMENDED_ALLERGENS] as const;
 
 export type Allergen = typeof ALLERGENS[number];
+
+/** アレルゲン情報が不明な場合に使う特殊フラグ */
+export const STAFF_CHECK = "スタッフにお聞きください" as const;

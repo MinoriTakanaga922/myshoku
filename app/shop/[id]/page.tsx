@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { ALLERGENS } from "@/lib/allergens";
+import { ALLERGENS, STAFF_CHECK } from "@/lib/allergens";
 import type { MenuItem, ShopWithMenus } from "@/types/database";
 
 const DISCLAIMER =
@@ -62,7 +62,8 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
 
   const isSafe = (menu: MenuItem) =>
     selectedAllergens.length === 0 ||
-    !selectedAllergens.some((a) => menu.allergens.includes(a));
+    (!menu.allergens.includes(STAFF_CHECK) &&
+      !selectedAllergens.some((a) => menu.allergens.includes(a)));
 
   const safeCount = shop.menu_items.filter(isSafe).length;
   const total = shop.menu_items.length;
@@ -183,7 +184,10 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
               {shop.menu_items.map((menu) => {
                 const safe = isSafe(menu);
                 const isExpanded = expandedMenu === menu.id;
-                const notContained = ALLERGENS.filter((a) => !menu.allergens.includes(a));
+                const actualAllergens = menu.allergens.filter((a) => a !== STAFF_CHECK);
+                const notContained = menu.allergens.includes(STAFF_CHECK)
+                  ? []
+                  : ALLERGENS.filter((a) => !actualAllergens.includes(a));
 
                 return (
                   <div
@@ -218,7 +222,14 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
                           >
                             {menu.name}
                           </h3>
-                          {selectedAllergens.length > 0 && (
+                          {menu.allergens.includes(STAFF_CHECK) ? (
+                            <span
+                              className="flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-bold"
+                              style={{ backgroundColor: "#fef3c7", color: "#92400e" }}
+                            >
+                              ⚠️ 要確認
+                            </span>
+                          ) : selectedAllergens.length > 0 && (
                             <span
                               className="flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-bold"
                               style={
@@ -267,14 +278,24 @@ export default function ShopDetailPage({ params }: { params: Promise<{ id: strin
                         className="border-t px-4 pb-4 pt-3"
                         style={{ borderColor: "#f3f4f6" }}
                       >
+                        {/* スタッフ確認フラグ */}
+                        {menu.allergens.includes(STAFF_CHECK) && (
+                          <div
+                            className="mb-3 rounded-xl px-3 py-2 text-xs font-medium"
+                            style={{ backgroundColor: "#fef3c7", color: "#92400e" }}
+                          >
+                            ⚠️ アレルゲン情報はスタッフにお聞きください
+                          </div>
+                        )}
+
                         {/* 含むアレルゲン */}
-                        {menu.allergens.length > 0 && (
+                        {menu.allergens.filter((a) => a !== STAFF_CHECK).length > 0 && (
                           <div className="mb-3">
                             <p className="mb-1.5 text-xs font-semibold text-red-600">
                               含むアレルゲン
                             </p>
                             <div className="flex flex-wrap gap-1.5">
-                              {menu.allergens.map((a) => (
+                              {menu.allergens.filter((a) => a !== STAFF_CHECK).map((a) => (
                                 <span
                                   key={a}
                                   className="rounded-full px-2 py-0.5 text-xs font-medium"

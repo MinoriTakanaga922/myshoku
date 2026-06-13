@@ -1,6 +1,6 @@
 "use client";
 
-import { MANDATORY_ALLERGENS, RECOMMENDED_ALLERGENS } from "@/lib/allergens";
+import { MANDATORY_ALLERGENS, RECOMMENDED_ALLERGENS, STAFF_CHECK } from "@/lib/allergens";
 
 interface AllergenSelectorProps {
   selected: string[];
@@ -19,8 +19,30 @@ export default function AllergenSelector({
       ? { backgroundColor: "#dc2626", borderColor: "#dc2626", color: "white" }
       : { backgroundColor: "#2563eb", borderColor: "#2563eb", color: "white" };
 
+  const staffCheckSelected = selected.includes(STAFF_CHECK);
+
   return (
     <div className="space-y-5">
+      {/* スタッフにお聞きください（includeモードのみ） */}
+      {mode === "include" && (
+        <div>
+          <button
+            type="button"
+            onClick={() => onToggle(STAFF_CHECK)}
+            className="px-3 py-2 rounded-xl text-xs font-medium border transition-all"
+            style={
+              staffCheckSelected
+                ? { backgroundColor: "#f59e0b", borderColor: "#f59e0b", color: "white" }
+                : { borderColor: "#fcd34d", color: "#92400e", backgroundColor: "#fffbeb" }
+            }
+          >
+            ⚠️ スタッフにお聞きください
+          </button>
+          <p className="mt-1 text-xs" style={{ color: "var(--color-muted)" }}>
+            アレルゲン情報が不明な場合はこちらを選択
+          </p>
+        </div>
+      )}
       {/* 特定8品目（義務表示） */}
       <div>
         <div className="flex items-center gap-2 mb-2">
