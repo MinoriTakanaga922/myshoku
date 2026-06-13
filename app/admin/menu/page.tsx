@@ -69,7 +69,7 @@ export default function AdminMenuPage() {
     init();
   }, [fetchMenus]);
 
-  const resetForm = () => {
+  const resetForm = (clearMsg = true) => {
     setForm(EMPTY_FORM);
     setSelectedAllergens([]);
     setMenuPhotoFile(null);
@@ -77,7 +77,7 @@ export default function AdminMenuPage() {
     setIngredientsImageFile(null);
     setIngredientsImagePreview("");
     setEditingId(null);
-    setMessage(null);
+    if (clearMsg) setMessage(null);
   };
 
   const openNew = () => {
@@ -167,17 +167,18 @@ export default function AdminMenuPage() {
       if (error) {
         setMessage({ type: "error", text: error.message });
       } else {
-        setMessage({ type: "success", text: "メニューを更新しました" });
         await fetchMenus(shop.id);
+        setMessage({ type: "success", text: "メニューを更新しました" });
+        resetForm(false);
       }
     } else {
       const { error } = await supabase.from("menu_items").insert(menuData);
       if (error) {
         setMessage({ type: "error", text: error.message });
       } else {
-        setMessage({ type: "success", text: "メニューを追加しました" });
         await fetchMenus(shop.id);
-        resetForm();
+        setMessage({ type: "success", text: "メニューを追加しました" });
+        resetForm(false);
       }
     }
     setSaving(false);
@@ -238,6 +239,20 @@ export default function AdminMenuPage() {
           + メニュー追加
         </button>
       </div>
+
+      {/* 保存結果メッセージ（フォーム外） */}
+      {message && editingId === null && (
+        <div
+          className="rounded-xl p-3 text-xs"
+          style={{
+            backgroundColor: message.type === "success" ? "#eff6ff" : "#fef2f2",
+            color: message.type === "success" ? "#1d4ed8" : "#b91c1c",
+          }}
+        >
+          {message.type === "success" ? "✅ " : "❌ "}
+          {message.text}
+        </div>
+      )}
 
       {/* メニューリスト */}
       {menus.length === 0 ? (
@@ -317,7 +332,7 @@ export default function AdminMenuPage() {
               {editingId === "new" ? "メニューを追加" : "メニューを編集"}
             </h2>
             <button
-              onClick={resetForm}
+              onClick={() => resetForm(true)}
               className="text-xs"
               style={{ color: "var(--color-muted)" }}
             >

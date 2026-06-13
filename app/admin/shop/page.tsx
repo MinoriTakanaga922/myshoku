@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Shop } from "@/types/database";
 
@@ -63,6 +64,7 @@ function ImageUpload({
 }
 
 export default function AdminShopPage() {
+  const router = useRouter();
   const [shop, setShop] = useState<Shop | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -154,7 +156,12 @@ export default function AdminShopPage() {
 
     if (shop) {
       const { error } = await supabase.from("shops").update(shopData).eq("id", shop.id);
-      setMessage(error ? { type: "error", text: error.message } : { type: "success", text: "更新しました" });
+      if (error) {
+        setMessage({ type: "error", text: error.message });
+        setSaving(false);
+      } else {
+        router.push("/admin");
+      }
     } else {
       const { data, error } = await supabase
         .from("shops")
@@ -163,12 +170,12 @@ export default function AdminShopPage() {
         .single();
       if (error) {
         setMessage({ type: "error", text: error.message });
+        setSaving(false);
       } else {
         setShop(data);
-        setMessage({ type: "success", text: "店舗を登録しました" });
+        router.push("/admin");
       }
     }
-    setSaving(false);
   };
 
   if (loading) {
