@@ -7,25 +7,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "メールアドレスが必要です" }, { status: 400 });
   }
 
-  const origin = request.headers.get("origin") ?? "https://myshoku.vercel.app";
-
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 
-  const { error } = await supabase.auth.signInWithOtp({
+  // ユーザーが存在しない場合は作成（既存の場合はエラーを無視）
+  await supabase.auth.admin.createUser({ email, email_confirm: true });
+
+  // メールを送らずにログインリンクをサーバー側で生成
+  const { data, error } = await supabase.auth.admin.generateLink({
+    type: "magiclink",
     email,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: `${origin}/auth/callback`,
-    },
+    options: { redirectTo: "https://myshoku.vercel.app/auth/callback" },
   });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ url: data.properties.action_link });
 }
