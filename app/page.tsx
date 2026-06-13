@@ -84,12 +84,6 @@ export default function HomePage() {
             </span>
             <span className="text-xs ml-2 opacity-75">マルシェ</span>
           </div>
-          <Link
-            href="/admin"
-            className="text-xs text-white opacity-60 hover:opacity-100 transition-opacity"
-          >
-            出店者 →
-          </Link>
         </div>
       </header>
 
