@@ -19,14 +19,14 @@ export default function LoginPage() {
     });
 
     const data = await res.json();
-    if (!res.ok || !data.url) {
+    if (!res.ok) {
       setError(data.error ?? "ログインに失敗しました");
       setLoading(false);
       return;
     }
 
-    // メール不要 — サーバー生成のリンクへ即リダイレクト
-    window.location.href = data.url;
+    // セッションCookieはサーバーがセット済み → /admin へ遷移
+    window.location.href = "/admin";
   };
 
   return (
